@@ -1,0 +1,7 @@
+- name: Deploy application to servers
+  hosts: all
+  become: true
+  vars:
+    message: "Hello, Ansible!"
+  roles:
+    - cowsay

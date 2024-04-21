@@ -1,0 +1,12 @@
+- name: Install cowsay
+  apt:
+    name: cowsay
+    state: present
+    update_cache: yes
+- name: Output cowsay message
+  shell: /usr/games/cowsay "{{ message }}"
+  register: cowsay_output
+  changed_when: False
+- name: Print cowsay message
+  debug:
+    msg: "{{ cowsay_output.stdout }}"

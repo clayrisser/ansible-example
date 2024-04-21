@@ -1,0 +1,26 @@
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+- name: Remove all files from /var/www/html
+  shell: rm -rf /var/www/html/*
+- name: Copy files from app_root to /var/www/html
+  shell: cp -r {{ app_root }}/* /var/www/html/
+- name: Set file permissions
+  shell: find /var/www/html -type f -exec chmod 644 {} +
+- name: Set directory permissions
+  shell: find /var/www/html -type d -exec chmod 755 {} +
+- name: Set ownership
+  shell: chown -R root:root /var/www/html
+- name: Copy Nginx configuration
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-enabled/default
+  notify:
+    - Restart Nginx
+- name: Ensure Nginx is running
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes

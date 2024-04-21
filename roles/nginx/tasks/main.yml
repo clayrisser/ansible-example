@@ -1,0 +1,23 @@
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+- name: Copy website to Nginx
+  copy:
+    src: ./
+    dest: /var/www/html/
+    owner: root
+    group: root
+    mode: 0644
+- name: Copy Nginx configuration
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-enabled/default
+  notify:
+    - Restart Nginx
+- name: Ensure Nginx is running
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
